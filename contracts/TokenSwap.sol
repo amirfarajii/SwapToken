@@ -14,12 +14,12 @@ interface IERC20{
 
 
 contract TokenSwap{
-    using SafeMath for uint;
+    using SafeMath for uint256;
     //state variables
     IERC20 public token1;
     IERC20 public token2;
     address private owner;
-    uint8 public rate = 100;
+    uint256 public rate = 100;
 
     modifier onlyOwner{
         require(owner == msg.sender, "Just Owner of contract call this function");
@@ -49,7 +49,7 @@ contract TokenSwap{
             token1.approve(address(this), amount);
         }
         require(token1.allowance(msg.sender, address(this)) >= amount, "Token 1 allowance too low");
-        uint amountRate = rate * amount;
+        uint256 amountRate = rate.add(amount);
         require(token2.allowance(owner, address(this)) >= amountRate, "Token 2 allowance too low");
         address receiver_of_token = msg.sender;
         //transfer TokenSwap
@@ -63,10 +63,10 @@ contract TokenSwap{
         bool sent = token.transferFrom(sender, recipient, amount);
         require(sent, "Token transfer failed");
     }
-    function setRate(uint8 _rate) onlyOwner public{
+    function setRate(uint256 _rate) onlyOwner public{
         rate = _rate;
     }
-    function viewRate() public view returns(uint8){
+    function viewRate() public view returns(uint256){
         return rate;
     }
 
